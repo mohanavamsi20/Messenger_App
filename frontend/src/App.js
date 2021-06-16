@@ -1,4 +1,3 @@
-// import logo from './logo.svg';
 import Home from './components/home';
 import './App.css';
 
@@ -9,5 +8,5 @@ function App() {
     </div>
   );
 }
-
 export default App;
+
