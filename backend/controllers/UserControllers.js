@@ -4,6 +4,10 @@ const jwt = require('jsonwebtoken')
 const logger = require('../utils/logger')
 const usersRouter = require('express').Router()
 
+// router.get('/profile', function(req, res, next) {
+//     res.render('profile', { title: 'profile', user: req.user });
+// });
+
 usersRouter.post('/signup', async (req, res, next) => {
     try {
         const body = req.body
@@ -69,6 +73,26 @@ usersRouter.post('/login', async (req,res,next) => {
         })
 
     }catch (exception) {
+        next(exception)
+    }
+})
+
+usersRouter.put('/update', async (req,res,next) => {
+    try{
+        const body = req.body
+
+        const user={
+            FirstName:body.FirstName,
+            LastName:body.LastName,
+            email:body.email,
+            password:await bcrypt.hash(body.password,10)
+        }
+
+        User.findByIdAndUpdate(request.params.id,user,{new:true})
+            .then(updateUser =>{
+                res.json(updateUser)
+            })
+    }catch(exception){
         next(exception)
     }
 })

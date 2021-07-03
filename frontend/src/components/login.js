@@ -1,4 +1,4 @@
-import React from 'react';
+import React,{useState} from 'react';
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -11,6 +11,8 @@ import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
+import loginService from '../services/login'
+import { useField } from '../hooks/index'
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -32,8 +34,31 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+
 export default function LoginIn() {
   const classes = useStyles();
+  const loginRef = React.createRef();
+
+  const [email, usernameReset] = useField('text')
+  const [password, passwordReset] = useField('password')
+  const [user, setUser] = useState(null)
+
+  const handleLogin = async (event) => {
+    event.preventDefault()
+    loginRef.current.toggleVisibility()
+    try {
+      const user = await loginService.login({
+        email: email.value,
+        password: email.value
+      })
+
+      window.localStorage.setItem('loggedAppUser', JSON.stringify(user))
+      loginService.setToken(user.token)
+      setUser(user)
+    } catch (exception) {
+      console.log("Error!!!")
+    }
+  }
 
   return (
     <Container component="main" maxWidth="xs">
@@ -56,6 +81,7 @@ export default function LoginIn() {
             name="email"
             autoComplete="email"
             autoFocus
+            email={email}
           />
           <TextField
             variant="outlined"
@@ -67,6 +93,7 @@ export default function LoginIn() {
             type="password"
             id="password"
             autoComplete="current-password"
+            password={password}
           />
           <FormControlLabel
             control={<Checkbox value="remember" color="primary" />}
@@ -78,6 +105,7 @@ export default function LoginIn() {
             variant="contained"
             color="primary"
             className={classes.submit}
+            handleSubmit={handleLogin}
           >
             Sign In
           </Button>
