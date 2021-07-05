@@ -1,28 +1,21 @@
-const config = require('./utils/config')
-const express = require('express')
-const app = express()
-const cors = require('cors')
-const bodyParser = require('body-parser')
-const middleware = require('./utils/middleware')
-const mongoose = require('mongoose')
-const logger = require('./utils/logger')
-const usersRouter = require('./controllers/UserControllers')
+const express = require("express");
 
-mongoose.connect(config.MONGODB_URI, {useUnifiedTopology: true, useNewUrlParser: true, useCreateIndex: true})
-    .then(() => {
-        logger.info('connected to MongoDB')
-    })
-    .catch((error) => {
-        logger.info('error connection to MongoDB:', error.message)
-    })
+const app = express();
 
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
-app.use(cors())
-app.use(middleware.tokenExtractor)
-app.use(middleware.requestLogger)
-app.use(bodyParser.json())
-app.use('/',usersRouter)
-app.use(middleware.unknownEndpoint)
-app.use(middleware.errorHandler)
+app.use(require("cors")());
+app.use("/user", require("./routes/user"));
+app.use("/chatroom", require("./routes/chatroom"));
+app.use(express.static('build'))
+const errorHandlers = require("./handlers/errorHandlers");
+app.use(errorHandlers.notFound);
+app.use(errorHandlers.mongoseErrors);
+if (process.env.ENV === "DEVELOPMENT") {
+  app.use(errorHandlers.developmentErrors);
+} else {
+  app.use(errorHandlers.productionErrors);
+}
 
-module.exports = app
+module.exports = app;
