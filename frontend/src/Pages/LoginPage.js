@@ -2,6 +2,8 @@ import React from "react";
 import makeToast from "../Toaster";
 import axios from "axios";
 import { withRouter } from "react-router-dom";
+import Link from '@material-ui/core/Link';
+import Grid from '@material-ui/core/Grid';
 
 const LoginPage = (props) => {
   const emailRef = React.createRef();
@@ -59,6 +61,13 @@ const LoginPage = (props) => {
           />
         </div>
         <button onClick={loginUser}>Login</button>
+        <Grid container>
+            <Grid item>
+              <Link href="/register" variant="body2">
+                {"Don't have an account? Sign Up"}
+              </Link>
+            </Grid>
+          </Grid>
       </div>
     </div>
   );

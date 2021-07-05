@@ -1,6 +1,8 @@
 import React from "react";
 import axios from "axios";
 import makeToast from "../Toaster";
+import Link from '@material-ui/core/Link';
+import Grid from '@material-ui/core/Grid';
 
 const RegisterPage = (props) => {
   const nameRef = React.createRef();
@@ -68,6 +70,13 @@ const RegisterPage = (props) => {
         />
       </div>
       <button onClick={registerUser}>Register</button>
+      <Grid container>
+            <Grid item>
+              <Link href="/login" variant="body2">
+                {"already have an account? Sign In"}
+              </Link>
+            </Grid>
+          </Grid>
     </div>
   );
 };
